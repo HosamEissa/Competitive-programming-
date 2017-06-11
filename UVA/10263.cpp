@@ -1,7 +1,7 @@
 /*
 Author: Hossam Eissa
 
-Idea:
+Idea:get distance between point and segment
 
 */
 #include <bits/stdc++.h>
