@@ -1,7 +1,7 @@
 /*
 Author: Hossam Eissa
 
-Idea:
+Idea:dfs the tree and get total sum of the root ,then dfs 1 more time for rest of the nodes
 
 */
 #include <bits/stdc++.h>
