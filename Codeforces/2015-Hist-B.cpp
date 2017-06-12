@@ -1,7 +1,7 @@
 /*
 Author: Hossam Eissa
 
-Idea:Do what problem Says
+Idea:Do what problem Says and take care that your divice isn't included
 
 */
 #include <bits/stdc++.h>
