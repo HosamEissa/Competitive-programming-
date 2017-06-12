@@ -1,7 +1,7 @@
 /*
 Author: Hossam Eissa
 
-Idea:
+Idea:convert to seconds
 
 */
 #include <bits/stdc++.h>
@@ -59,24 +59,6 @@ const int N = 1e5+ 50;
 const double EPS=1e-8;
 const double INF=2e15+5;
 ll n, m, k;
-int arr[N],sz[N];
-int f(int a){
-return arr[a]= arr[a]==a?a:f(arr[a]);
-}
-void connect(int a,int b){
-a=f(a);
-b=f(b);
-if(a==b)return ;
-if(sz[a]<sz[b]){
-    arr[a]=b;
-    sz[b]+=sz[a];
-}
-else {
-    arr[b]=a;
-    sz[a]+=sz[b];
-}
-
-}
 int main()
 {
    // FO;
