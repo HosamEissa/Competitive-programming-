@@ -1,7 +1,7 @@
 /*
 Author: Hossam Eissa
 
-Idea:
+Idea:try all solutions with dp and items >=d can't be taken for normal friends
 
 */
 #include <bits/stdc++.h>
