@@ -1,7 +1,7 @@
 /*
 Author: Hossam Eissa
 
-Idea:
+Idea:Do what problem Says
 
 */
 #include <bits/stdc++.h>
