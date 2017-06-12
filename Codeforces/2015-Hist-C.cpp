@@ -1,7 +1,7 @@
 /*
 Author: Hossam Eissa
 
-Idea:
+Idea: time to change chars+time to move
 
 */
 #include <bits/stdc++.h>
