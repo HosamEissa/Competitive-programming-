@@ -1,6 +1,6 @@
 /*
 Author: Hossam Eissa
-Idea: Z table
+Idea:  rev(s)+s    (Z table)
 */
 #include <bits/stdc++.h>
 using namespace std;
