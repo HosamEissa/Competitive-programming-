@@ -1,6 +1,6 @@
 /*
 Author: Hossam Eissa
-Idea:
+Idea: pre calculate all the number and answer querys 
 */
 #include <bits/stdc++.h>
 using namespace std;
