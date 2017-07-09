@@ -128,7 +128,7 @@ int main()
     {
 
         ll &r=dp[i];
-    /*// cout<<"a7a"<<endl;
+    /*
         for(int j=0; j<i; j++)
         {
             dp[i]=min(dp[i],dp[j]+v[i].first*v[j+1].second);
