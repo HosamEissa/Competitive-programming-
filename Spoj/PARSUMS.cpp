@@ -57,7 +57,7 @@ void update(ll val, int ql, int qr, int l, int r, int p) {
 	int m = (l + r) >> 1;
 	update(val, ql, qr, l, m, (p << 1));
 	update(val, ql, qr, m + 1, r, (p << 1) | 1);
-	tree[p] = tree[(p << 1)] & tree[(p << 1) | 1];
+	tree[p] = min(tree[(p << 1)] , tree[(p << 1) | 1]);
 }
 int main() {
 	int n;
