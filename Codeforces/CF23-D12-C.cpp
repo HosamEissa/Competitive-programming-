@@ -3,7 +3,7 @@
  *
  *  Created on: Aug 23, 2017
  *      Author: Hossam Eissa
- *      Idea: 
+ *      Idea: sort items for apples and sum the odd indexs and even indexs of orange if odd>=sum/2 or even+last>=sum/2 answer is found
  */
 
 #include<bits/stdc++.h>
