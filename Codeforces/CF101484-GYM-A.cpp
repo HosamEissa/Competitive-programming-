@@ -1,7 +1,7 @@
 /*
  * CF101484-GYM-A.cpp.cpp
  *
- *  Created on: Aug 27, 2017
+ *  Created on: Aug 28, 2017
  *      Author: Hossam Eissa
  *      Idea: if x>mx or x< mn answer = -1 else if x in the array ans =1 else ans =2
  */
