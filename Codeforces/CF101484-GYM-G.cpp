@@ -1,7 +1,7 @@
 /*
  * CF101484-GYM-G.cpp
  *
- *  Created on: Aug 27, 2017
+ *  Created on: Aug 28, 2017
  *      Author: Hossam Eissa
  *      Idea: use floyed to get minmum cost from every pair of chars then use dp to try every possible configration 
  */
