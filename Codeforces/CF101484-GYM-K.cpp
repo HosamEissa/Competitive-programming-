@@ -1,7 +1,7 @@
 /*
- * contest.cpp
+ * CF101484-GYM-K.cpp
  *
- *  Created on: Aug 27, 2017
+ *  Created on: Aug 28, 2017
  *      Author: Hossam Eissa
  *      Idea: for every person find how many person inside his mask and how many mask he is inside and how many equal to him using dp
  */
