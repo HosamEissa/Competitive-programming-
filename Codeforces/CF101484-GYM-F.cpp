@@ -1,7 +1,7 @@
 /*
  * CF101484-GYM-F.cpp
  *
- *  Created on: Aug 27, 2017
+ *  Created on: Aug 28, 2017
  *      Author: Hossam Eissa
  *      Idea: since you are given complete binary tree you will have maximum tree of depth log(N)
  *            so preprocess the answer for each node in log(n) and answer qurry in o(1)
