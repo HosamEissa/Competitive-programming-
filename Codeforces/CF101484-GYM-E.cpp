@@ -1,7 +1,7 @@
 /*
- * contest.cpp
+ * CF101484-GYM-E.cpp
  *
- *  Created on: Aug 27, 2017
+ *  Created on: Aug 28, 2017
  *      Author: Hossam Eissa
  *      Idea:get centeriod point of any 3 points in the convex polgon and convert all the points into polar angles then for every point
  *          in the other polygon get the polar angle for it with the centeroid point and get the two points before and after it in log(n)
