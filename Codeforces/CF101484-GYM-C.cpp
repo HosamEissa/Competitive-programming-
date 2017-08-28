@@ -1,7 +1,7 @@
 /*
  * CF101484-GYM-C.cpp
  *
- *  Created on: Aug 27, 2017
+ *  Created on: Aug 28, 2017
  *      Author: Hossam Eissa
  *      Idea: for every second of the contest calculate the winner if it is your contestant ans++
  */
