@@ -3,7 +3,7 @@
  *
  *  Created on: Aug 29, 2017
  *      Author: Hossam Eissa
- *      Idea: 
+ *      Idea: update kmp to work with char as l-c
  */
 
 #include<bits/stdc++.h>
