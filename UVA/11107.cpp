@@ -4,6 +4,7 @@
  *  Created on: Sep 6, 2017
  *      Author: Hossam Eissa
  *      Idea: put all the strings in one string ans then build suffix array then LCP and walk on the string to get the answer using LCP
+ *      
  */
 
 #include<bits/stdc++.h>
@@ -18,6 +19,7 @@ int rnk[Mx];
 int tmprank[Mx];
 int lcp[Mx];
 int idx[Mx];
+int counter[Mx];
 struct cmp {
 	int h;
 	bool operator()(int i, int j) const {
@@ -82,27 +84,32 @@ int main() {
 		int nx = n / 2 + 1;
 		string s = str;
 		set<string> answer;
-		for (int i = 0; i <= last; i++) {
-			//printf("%d %d %d %s\n", i, idx[suf[i]], lcp[i], str + suf[i]);
-			set<int> st;
-			int mx = lcp[i];
-			st.insert(idx[suf[i]]);
-			for (int j = i - 1; j >= 0; j--) {
-				st.insert(idx[suf[j]]);
-				if (st.size() == nx)
-					break;
-				mx = min(mx, lcp[j]);
+		multiset<int> lcps;
+		int cnt = 0;
+		for (int i = 0, j = 0; i <= last; i++) {
+			//	printf("%d %d %d %s\n", i, idx[suf[i]], lcp[i], str + suf[i]);
+			while (cnt < nx && j <= last) {
+				lcps.insert(lcp[j]);
+				counter[idx[suf[j]]]++;
+				if (counter[idx[suf[j]]] == 1)
+					cnt++;
+				j++;
 			}
+			counter[idx[suf[i]]]--;
+			if (counter[idx[suf[i]]] == 0)
+				cnt--;
+			lcps.erase(lcps.find(lcp[i]));
+			if (ans < *(lcps.begin())) {
+				ans = *(lcps.begin());
+				answer.clear();
+			}
+			if (ans == *(lcps.begin())) {
+				answer.insert(s.substr(suf[i], ans));
+			}
+			//cout<<i<<" "<<ans<<endl;
+
 			//cout << i << " " << st.size() << endl;
-			if (st.size() == nx) {
-				if (ans < mx) {
-					ans = mx;
-					answer.clear();
-				}
-				if (ans == mx) {
-					answer.insert(s.substr(suf[i], ans));
-				}
-			}
+
 		}
 		//cerr<<ans<<endl;
 		if (ans) {
