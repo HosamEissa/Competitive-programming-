@@ -3,7 +3,8 @@
 *
 *
 *   Author: Hossam Eissa
-*   Bridges and articulation points tarjan
+*   idea: get all the bridges and for the nodes that can be reached with out bidges compress them in one node then you get a tree
+*        the problem now i get the node that the largest distance to any node is minmum 
 */
 #include <bits/stdc++.h>
 using namespace std;
@@ -11,17 +12,22 @@ using namespace std;
 const int N = 1e5 + 5;
 vector<int> adj[N];
 vector<pair<int,int > > adjComp[N];
-
+set<pair<int,int> >bridges;
 int n, DFSN[N], LOW[N], id, root, rootCalls,Comp[N],valcomp[N],par[N];
-ll vis[N];
+ll vis[N], cost[N][19];
+
+
 void init()
 {
     for(int i=0; i<N; i++)
         adj[i].clear(),adjComp[i].clear();
     id = -1;
+    bridges.clear();
     memset(DFSN, -1, sizeof DFSN);
     memset(LOW, 0, sizeof LOW);
     memset(valcomp, -1, sizeof LOW);
+    memset(par,0,sizeof par);
+    memset(cost,0,sizeof cost);
     fill(Comp,Comp+N,1e9);
 }
 void Tarjan(int u, int p = -1)
@@ -33,6 +39,8 @@ void Tarjan(int u, int p = -1)
         {
             Tarjan(v, u);
             rootCalls += u == root;
+
+            if(DFSN[u] < LOW[v]) bridges.insert({min(u, v), max(u, v)});
             LOW[u] = min(LOW[u], LOW[v]);
 
         }
@@ -41,18 +49,18 @@ void Tarjan(int u, int p = -1)
 
     }
 }
-pair<int,int>bfs(int st)
+pair<ll,int>bfs(int st)
 {
     queue<int>q;
     memset(vis,-1,sizeof vis);
     vis[st]=0;
     q.push(st);
-    pair<int,int>ret={-1,-1};
+    pair<ll,int>ret= {-1,-1};
     while(!q.empty())
     {
         int u=q.front();
         q.pop();
-        ret=max(ret,{vis[u],u});
+        ret=max(ret, {vis[u],u});
         for(auto xx : adjComp[u])
         {
             int v=xx.first;
@@ -66,7 +74,19 @@ pair<int,int>bfs(int st)
     return ret;
 }
 int sparse[N][19],lvl[N];
-ll cost[N][19];
+vector<int>tmp;
+void dfs2(int u)
+{
+    for(auto v : adj[u])
+    {
+        if(bridges.count({min(u,v),max(u,v)}))
+            continue;
+        if(vis[v])continue;
+        vis[v]=1;
+        dfs2(v);
+    }
+    tmp.push_back(u);
+}
 void dfs(int u)
 {
 
@@ -100,7 +120,7 @@ void buildSparse(int n)
 }
 pair<int,ll> getPth(int v,int p)
 {
-    pair<int,int>ret;
+    pair<int,ll>ret={0,0};
     for(int i=0; v!=-1&&i<18; i++)
     {
         if(p&(1<<i))
@@ -116,7 +136,7 @@ ll getCost(int u,int v)
 {
     if(lvl[u]>lvl[v])
         swap(u,v);
-   // cout<<u<<" "<<v<<" "<<lvl[u]<<" "<<lvl[v]<<endl;
+    // cout<<u<<" "<<v<<" "<<lvl[u]<<" "<<lvl[v]<<endl;
     int p=lvl[v]-lvl[u];
     pair<int,ll>ret=getPth(v,p);
     v=ret.first;
@@ -134,15 +154,10 @@ ll getCost(int u,int v)
             v=sparse[v][i];
         }
     }
-      //  cout<<"a7a2 "<<ret.first<<" "<<ret.second<<endl;
+    //  cout<<"a7a2 "<<ret.first<<" "<<ret.second<<endl;
     ret.second+=cost[u][0];
     ret.second+=cost[v][0];
     return ret.second;
-}
-int getF(int i){
-    if(DFSN[i]==LOW[i])
-        return DFSN[i];
-    return LOW[i]=getF(LOW[i]);
 }
 int main()
 {
@@ -173,11 +188,36 @@ int main()
                 Tarjan(i);
             }
         }
+        memset(vis,0,sizeof vis);
+        for(int i=0; i<n; i++)
+        {
+            if(!vis[i])
+            {
+                vis[i]=1;
+                dfs2(i);
+                int mn=1e9;
+                for(int i=0; i<tmp.size(); i++)
+                {
+                    mn=min(mn,LOW[tmp[i]]);
+                }
+
+                for(int i=0; i<tmp.size(); i++)
+                {
+                    LOW[tmp[i]]=mn;
+                }
+              //  cout<<tmp.size()<<endl;
+                tmp.clear();
+
+
+            }
+        }
+
+
         int cnt=0;
         for(int i=0; i<n; i++)
         {
-          //  cout<<i<<" "<<LOW[i]<<endl;
-            int val=getF(i);
+            //  cout<<i<<" "<<LOW[i]<<endl;
+            int val=LOW[i];
             if(valcomp[val]==-1)
             {
                 valcomp[val]=cnt;
@@ -198,14 +238,12 @@ int main()
             int c2=valcomp[LOW[b]];
             if(c1!=c2)
             {
-               // cout<<c1<<" "<<c2<<" "<<c<<endl;
+                // cout<<c1<<" "<<c2<<" "<<c<<endl;
                 adjComp[c1].push_back({c2,c});
                 adjComp[c2].push_back({c1,c});
             }
         }
-       // cout<<"a7a"<<endl;
-        memset(par,0,sizeof par);
-        memset(cost,0,sizeof cost);
+        // cout<<"a7a"<<endl;
         memset(vis,0,sizeof vis);
         vis[0]=1;
         dfs(0);
@@ -216,18 +254,20 @@ int main()
         }
         else
         {
-            pair<int,int> p=bfs(0);
+            pair<ll,int> p=bfs(0);
             int st=p.second;
             p=bfs(st);
             int en=p.second;
-            pair<ll,int>ans={p.first,min(Comp[st],Comp[en])};
+            pair<ll,int>ans= {p.first,min(Comp[st],Comp[en])};
 
-            for(int i=0;i<cnt;i++){
-                    ll c=getCost(i,st);
-                    pair<ll,int>p={c,i};
-                    p.first=max(p.first,getCost(i,en));
+            for(int i=0; i<cnt; i++)
+            {
+                ll c=getCost(i,st);
+                pair<ll,int>p2= {c,i};
+                p2.first=max(p2.first,getCost(i,en));
 
-                    ans=min(ans,p);
+                ans=min(ans,p2);
+                assert(ans.first>=0);
             }
             cout<<Comp[ans.second]+1<<" "<<ans.first<<endl;
 
