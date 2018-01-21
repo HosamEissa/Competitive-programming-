@@ -1,0 +1,213 @@
+/*
+Author: Hossam Eissa
+Idea:
+*/
+#include <bits/stdc++.h>
+using namespace std;
+#define ll  long long
+#define start ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+const int N = 1e5+5;
+const double PI=acos(-1);
+struct TreeCentroid
+{
+
+    const int INF = 2000000000;
+    vector<vector<int>>G,sparse,CenTree;
+    vector<multiset<int> >Ms;
+    int N,lgN,cnt,center;
+    vector<int>lvl,par,sum,done,ans;
+    TreeCentroid(int n,int lgn)
+    {
+        N=n;
+        lgN=lgn;
+        G.resize(N);
+        CenTree.resize(N);
+        Ms.resize(N);
+    }
+    void add_edge(int u,int v)
+    {
+        G[u].push_back(v);
+        G[v].push_back(u);
+    }
+    void dfsLCA(int u)
+    {
+        for(auto v : G[u])
+        {
+            if(v==sparse[0][u])continue;
+            sparse[0][v]=u;
+            lvl[v]=lvl[u]+1;
+            dfsLCA(v);
+        }
+    }
+
+    void buildSparse()
+    {
+        sparse.clear();
+        lvl.clear();
+        sparse.resize(lgN,vector<int>(N));
+
+        lvl.resize(N);
+        dfsLCA(0);
+        for(int i=1; i<lgN; i++)
+        {
+            for(int j=0; j<N; j++)
+            {
+                int tmp=sparse[i-1][j];
+                if(tmp!=-1)
+                    sparse[i][j]=sparse[i-1][tmp];
+            }
+        }
+    }
+    int getPth(int v,int p)
+    {
+        for(int i=0; v!=-1&&i<lgN; i++)
+        {
+            if(p&(1<<i))
+            {
+                v=sparse[i][v];
+            }
+        }
+        return v;
+    }
+    int getLCA(int u,int v)
+    {
+        if(lvl[u]>lvl[v])
+            swap(u,v);
+        int p=lvl[v]-lvl[u];
+        v=getPth(v,p);
+        if(v==u)return u;
+        for(int i=17; i>=0; i--)
+        {
+            if(sparse[i][u]!=sparse[i][v])
+            {
+                u=sparse[i][u];
+                v=sparse[i][v];
+            }
+        }
+        return sparse[0][u];
+    }
+    int getdist(int u,int v)
+    {
+        int p=getLCA(u,v);
+        return lvl[u]+lvl[v]-2*lvl[p];
+    }
+    int dfs1(int u,int p){
+        sum[u]=1;
+        cnt++;
+        for(auto v : G[u]){
+            if(done[v])continue;
+            if(v!=p){
+                dfs1(v,u);
+                sum[u]+=sum[v];
+            }
+        }
+    //    cout<<"sum = "<<u<< " "<<sum[u]<<endl;
+    }
+    int dfs2(int u,int p){
+
+      //  cout<<u<<" 2 "<<p<<endl;
+        for(auto v : G[u]){
+            if(done[v])continue;
+            if(v!=p&&sum[v]>cnt/2)
+                return dfs2(v,u);
+        }
+        return u;
+    }
+    void decompose(int root,int p){
+        cnt=0;
+        dfs1(root,root);
+        int cen=dfs2(root,root);
+        if(p==-1)
+            p=cen,center=cen;
+        done[cen]=1;
+        par[cen]=p;
+//        cout<<cen<<" "<<par[cen]<<endl;
+        for(auto v:G[cen]){
+            if(done[v])continue;
+            decompose(v,cen);
+            CenTree[cen].push_back(v);
+        }
+    }
+    void buildCenTree(){
+        done.resize(N);
+        sum.resize(N);
+        ans.resize(N,INF);
+        par.resize(N);
+        buildSparse();
+        decompose(0,-1);
+        for(int i=0;i<Ms.size();i++)
+            Ms[i].insert(1e9);
+    }
+    void update(int u){
+        int x=u;
+        while(1){
+                Ms[x].insert(getdist(u,x));
+         //       cout<<u<<" "<<x<<" "<<getdist(u,x)<<" "<<ans[x]<<endl;
+           // cout<<x<<" "<<ans[x]<<endl;
+            if(x==par[x])
+                return;
+            x=par[x];
+        }
+    }
+    void update2(int u){
+        int x=u;
+        while(1){
+            Ms[x].erase(Ms[x].find(getdist(u,x)));
+         //       cout<<u<<" "<<x<<" "<<getdist(u,x)<<" "<<ans[x]<<endl;
+           // cout<<x<<" "<<ans[x]<<endl;
+            if(x==par[x])
+                return;
+            x=par[x];
+        }
+
+    }
+    int query(int u){
+        int x=u;
+        int ret=INF;
+        while(1){
+            ret=min(ret,getdist(u,x)+(*Ms[x].begin()));
+          //  cout<<u<<" "<<x<<" "<<getdist(u,x)<<" "<<ret<<endl;
+            if(x==par[x])
+                break;
+            x=par[x];
+        }
+        return ret;
+    }
+};
+
+
+
+bool color[N];
+int main()
+{
+    int n,q;
+    scanf("%d",&n);
+    TreeCentroid TC(n,19);
+    for(int i=1;i<n;i++){
+        int a,b;
+        scanf("%d%d",&a,&b);
+        a--;
+        b--;
+        TC.add_edge(a,b);
+    }
+    TC.buildCenTree();
+    scanf("%d",&q);
+    while(q--){
+        int a,b;
+        scanf("%d%d",&a,&b);
+        if(a==0){
+                if(!color[b-1])
+                    TC.update(b-1);
+                else
+                    TC.update2(b-1);
+                color[b-1]=!color[b-1];
+        }
+        else {
+
+            int c=TC.query(b-1);
+            printf("%d\n",(c==1e9?-1:c));
+        }
+
+    }
+
+}
