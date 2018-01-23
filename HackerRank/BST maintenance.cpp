@@ -246,9 +246,9 @@ int main()
         int a;
         scanf("%d",&a);
         st.insert(a);
-      //  if(i==0)
+        if(i==0)
             index2[a]=in[i]=add(a,0);
-      /*  else {
+       else {
                 L=st.lower_bound(a);
                 R=st.upper_bound(a);
                 int idx=-1;
@@ -266,7 +266,7 @@ int main()
                 }
           //      cout<<a<<" "<<idx<<endl;
                 index2[a]=in[i]=add(a,idx);
-        }*/
+        }
     }
     dfs0(0);
     TreeCentroid TC(n,19);
